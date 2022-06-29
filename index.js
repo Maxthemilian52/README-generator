@@ -1,7 +1,7 @@
 const path = require("path")
 const inquirer = require('inquirer');
 const fs = require('fs');
-const generateREADME = require("generateREADME");
+const generateREADME = require("./generateREADME");
 
 
 
@@ -9,18 +9,19 @@ const questions = [
     {
     type: 'input',
     name: 'name',
-    message: 'What is your name?',
-    },
-    {
-    type: 'input',
-    name: 'location',
-    message: 'Where are you from?',
+    message: 'What is your full name name?',
     },
     {
     type: 'input',
     name: 'project',
     message: 'What is your project called?',
     },
+    {
+    type: 'list',
+    name: 'license',
+    message: 'What licence are you using?',
+    choices: ["MIT", "APACHE", "GPL", "None"]
+      },
     {
     type: 'input',
     name: 'motivation',
@@ -43,6 +44,11 @@ const questions = [
     },
     {
     type: 'input',
+    name: 'email',
+    message: 'What is your email address?',
+    },
+    {
+    type: 'input',
     name: 'github',
     message: 'Enter your GitHub Username',
     },
@@ -53,4 +59,15 @@ const questions = [
     },
   ];
 
+  function writeFile(fileName, data) {
+    return fs.writeFileSync(path.join(process.cwd(), fileName), data)
+  }
   
+  function create() {
+    inquirer.prompt(questions).then((inquirerResponses) => {
+      console.log("Your README has been generated!");
+      writeFile("README.md", generateREADME({...inquirerResponses}))
+    })
+  }
+
+  create();
